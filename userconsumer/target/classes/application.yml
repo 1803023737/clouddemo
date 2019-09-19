@@ -1,0 +1,31 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: user-consumer
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10000/eureka,http://127.0.0.1:10001/eureka
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30 #拉取服务列表间隔时长
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+hystrix:  #全局配置服务调用的时间
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+feign:
+  Hystrix:
+    enabled:  true #开启feign的熔断机制
+ribbon: #feign中配置超时时长
+  ConnectionTimeOut: 1000
+  ReadTimeOut: 2000
+    #ip-address: ${spring.cloud.client.ip-address}
+#user-service: #对于调用的服务采用随机的负载均衡算法
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
